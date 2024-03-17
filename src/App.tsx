@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import '@experian-design-system/seds-tags';
+import '@experian-design-system/seds-tags/styles.css';
 import { SedsChipItem } from '@experian-design-system/seds-tags';
 
 const initialChipItems: SedsChipItem[] = [
@@ -9,30 +10,29 @@ const initialChipItems: SedsChipItem[] = [
   { color: 'error', iconName: 'check_circle', remove: false, title: 'Error' }
 ];
 
-const chipItemsString = JSON.stringify(initialChipItems);
-
 const TagsApp = () => {
   const [chipItems, setChipItems] = useState<SedsChipItem[]>(initialChipItems);
-
   const tagsRef = useRef<HTMLElement & { chipItem: string }>(null);
 
-useEffect(() => {
-  const tagsElement = tagsRef.current;
+  useEffect(() => {
+    const tagsElement = tagsRef.current;
+    if (tagsElement) {
+      tagsElement.chipItem = JSON.stringify(chipItems);
+    }
 
-  const handleChipItemChange = (event: Event) => {
-    const chips = event as CustomEvent;
-    console.log('chipItemChange event fired:', chips.detail);
-  };
-
-  return () => {
-    tagsElement?.removeEventListener('chipItemChange', handleChipItemChange as EventListener);
-  };
-
-}, []);
+    const handleChipItemChange = (event: Event) => {
+      const chips = event as CustomEvent;
+      console.log('chipItemChange event fired:', chips.detail);
+    };
+  
+    return () => {
+      tagsElement?.removeEventListener('chipItemChange', handleChipItemChange as EventListener);
+    };
+  }, [chipItems, tagsRef]);
 
   return (
     <div className="App">
-      <seds-tags ref={tagsRef} chipItem={chipItemsString}></seds-tags>
+      <seds-tags ref={tagsRef}  chipItem={JSON.stringify(chipItems)}></seds-tags>
     </div>
   );
 };
