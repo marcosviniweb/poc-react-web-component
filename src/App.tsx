@@ -1,57 +1,40 @@
-import React, { useEffect, useRef, useState, Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import '@experian-design-system/seds-checkbox';
-import { Item } from '@experian-design-system/seds-checkbox';
+import '@experian-design-system/seds-tags';
+import { SedsChipItem } from '@experian-design-system/seds-tags';
 
-
-const initialItems: Item[] = [
-  { name: 'Opção 1', checked: false, position: 'before' },
-  { name: 'Opção 2', checked: false, position: 'after' },
+const initialChipItems: SedsChipItem[] = [
+  { color: 'success', iconName: 'alarm', remove: true, title: 'Urgent' },
+  { color: 'warning', iconName: 'check_circle', remove: false, title: 'Approved' },
+  { color: 'error', iconName: 'check_circle', remove: false, title: 'Error' }
 ];
 
-const App = () => {
-  const [items, setItems] = useState<Item[]>(initialItems);
-  const [model, setModel] = useState<boolean>(false);
+const chipItemsString = JSON.stringify(initialChipItems);
 
-  const itemCheckbox = JSON.stringify(items);
-  const checkboxRef = useRef<HTMLElement>(null); 
+const TagsApp = () => {
+  const [chipItems, setChipItems] = useState<SedsChipItem[]>(initialChipItems);
 
-  useEffect(() => {
-    const checkboxElement = checkboxRef.current;
+  const tagsRef = useRef<HTMLElement & { chipItem: string }>(null);
 
-    if (checkboxElement) {
-      const handleIndeterminateChange = (event: CustomEvent) => {
-        console.log('Indeterminate state changed for items:', event.detail);
-        setItems(event.detail);
-      };
+useEffect(() => {
+  const tagsElement = tagsRef.current;
 
-      const handleModelChange = (event: CustomEvent) => {
-        console.log('Model changed:', event.detail);
-        setModel(event.detail);
-      };
+  const handleChipItemChange = (event: Event) => {
+    const chips = event as CustomEvent;
+    console.log('chipItemChange event fired:', chips.detail);
+  };
 
-      checkboxElement.addEventListener('indeterminateChange', handleIndeterminateChange as EventListener);
-      checkboxElement.addEventListener('modelChange', handleModelChange as EventListener);
+  return () => {
+    tagsElement?.removeEventListener('chipItemChange', handleChipItemChange as EventListener);
+  };
 
-      return () => {
-        checkboxElement.removeEventListener('indeterminateChange', handleIndeterminateChange as EventListener);
-        checkboxElement.removeEventListener('modelChange', handleModelChange as EventListener);
-      };
-    }
-  }, [checkboxRef]);
-
+}, []);
 
   return (
-    <header className="App-header">
-      <seds-checkbox
-        ref={checkboxRef}
-        label='Checkbox do Seds'
-        items={itemCheckbox}
-        disabled={false}
-        required={true}
-      ></seds-checkbox>
-    </header>
+    <div className="App">
+      <seds-tags ref={tagsRef} chipItem={chipItemsString}></seds-tags>
+    </div>
   );
 };
 
-export default App;
+export default TagsApp;
