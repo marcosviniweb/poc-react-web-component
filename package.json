@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@experian-design-system/seds-checkbox": "file:../experian-design-system-seds-checkbox-1.0.2.tgz",
+    "@experian-design-system/seds-checkbox": "file:../../experian-design-system-seds-checkbox-1.0.2.tgz",
+    "@experian-design-system/seds-tags": "file:../../experian-design-system-seds-tags-1.0.2.tgz",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
